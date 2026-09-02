@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flipbook Brosur — STMIK Triguna Dharma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="stage">
+
+    <div class="book-wrap" id="bookWrap">
+
+      <!-- Panel kiri: menampilkan halaman SEBELUMNYA (pratinjau).
+           Kosong/tersembunyi saat berada di halaman pertama. -->
+      <div class="page-left is-empty" id="pageLeft">
+        <img id="prevImg" src="" alt="Halaman sebelumnya" draggable="false">
+      </div>
+
+      <div class="spine is-empty" id="spine"></div>
+
+      <!-- Panel kanan: halaman AKTIF, di sinilah animasi 3D flip terjadi. -->
+      <div class="book" id="book">
+
+        <!-- 4 halaman brosur — tiap .page satu gambar penuh.
+             Ganti src gambar di images/, atau tambah <div class="page"> baru
+             dengan pola yang sama untuk menambah halaman lagi. -->
+
+        <div class="page" data-index="0">
+          <div class="page__face page__face--front">
+            <img src="images/1.png" alt="Brosur halaman 1" draggable="false">
+          </div>
+          <div class="page__face page__face--back"></div>
+        </div>
+
+        <div class="page" data-index="1">
+          <div class="page__face page__face--front">
+            <img src="images/2.png" alt="Brosur halaman 2" draggable="false">
+          </div>
+          <div class="page__face page__face--back"></div>
+        </div>
+
+        <div class="page" data-index="2">
+          <div class="page__face page__face--front">
+            <img src="images/3.png" alt="Brosur halaman 3" draggable="false">
+          </div>
+          <div class="page__face page__face--back"></div>
+        </div>
+
+        <div class="page" data-index="3">
+          <div class="page__face page__face--front">
+            <img src="images/4.png" alt="Brosur halaman 4" draggable="false">
+          </div>
+          <div class="page__face page__face--back"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="dots" id="dots"></div>
+
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>

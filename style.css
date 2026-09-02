@@ -1,0 +1,207 @@
+/* ============================================================
+   Design tokens
+   Palette diambil dari warna asli brosur STMIK Triguna Dharma
+   ============================================================ */
+:root{
+  --navy-deep:   #071b3f;
+  --navy:        #0d2f6b;
+  --blue:        #1662c4;
+  --sky:         #3fa9f5;
+  --yellow:      #ffd400;
+  --paper:       #fbfaf6;
+  --ink:         #0f1526;
+
+  /* ukuran satu halaman (default: layar kecil/HP) */
+  --page-w: 34vw;
+  --page-h: calc(var(--page-w) * 866 / 610); /* rasio asli poster 610x866 */
+  --flip-duration: 0.85s;
+  --pane-duration: 0.4s;
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  margin: 0;
+  height: 100%;
+  background: var(--navy-deep);
+  color: var(--paper);
+  font-family: 'Manrope', system-ui, sans-serif;
+}
+
+body{
+  background:
+    radial-gradient(circle at 18% 12%, rgba(63,169,245,0.22), transparent 42%),
+    radial-gradient(circle at 82% 88%, rgba(255,212,0,0.12), transparent 45%),
+    linear-gradient(160deg, var(--navy-deep), var(--navy) 70%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 16px;
+}
+
+.stage{
+  width: 100%;
+  max-width: 1450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ---------- Book stage: spread dua halaman ---------- */
+.book-wrap{
+  position: relative;
+  perspective: 2800px;
+  height: var(--page-h);
+  display: flex;
+  align-items: stretch;
+}
+
+/* Panel kiri — pratinjau halaman SEBELUMNYA (statis, bukan animasi 3D) */
+.page-left{
+  width: var(--page-w);
+  height: 100%;
+  flex-shrink: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 10px 0 24px rgba(0,0,0,0.4);
+  transition: width var(--pane-duration) ease, opacity var(--pane-duration) ease,
+              margin var(--pane-duration) ease, box-shadow var(--pane-duration) ease;
+}
+.page-left img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.82; /* sedikit diredupkan supaya halaman aktif tetap jadi fokus */
+  transition: opacity 0.25s ease;
+}
+.page-left:hover img{ opacity: 1; }
+
+/* Kondisi kosong: di halaman pertama tidak ada "sebelumnya", jadi
+   panel dilebur ke lebar 0 — tidak pernah tampil sebagai kotak putih. */
+.page-left.is-empty{
+  width: 0;
+  opacity: 0;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* Sekat tengah (punggung buku), hanya tampak saat panel kiri ada isinya */
+.spine{
+  width: 14px;
+  height: 100%;
+  flex-shrink: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.4), rgba(0,0,0,0) 70%);
+  transition: width var(--pane-duration) ease, opacity var(--pane-duration) ease;
+}
+.spine.is-empty{
+  width: 0;
+  opacity: 0;
+}
+
+/* Panel kanan — halaman AKTIF, tempat animasi 3D flip terjadi */
+.book{
+  position: relative;
+  width: var(--page-w);
+  height: 100%;
+  flex-shrink: 0;
+  overflow: hidden;      /* clip halaman yang sudah terbalik (-180deg)
+                             supaya tidak "meluber" keluar kotak */
+  border-radius: 6px;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 30px 45px rgba(0,0,0,0.55));
+}
+
+.page{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  transition: transform var(--flip-duration) cubic-bezier(.45,.05,.2,1);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.page__face{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--paper);
+}
+
+.page__face--front{ z-index: 2; }
+.page__face--back{
+  transform: rotateY(180deg);
+  background:
+    repeating-linear-gradient(135deg, rgba(13,47,107,0.05) 0 2px, transparent 2px 14px),
+    var(--paper);
+}
+
+.page__face img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* bayangan halus di sisi lipatan (tulang buku) */
+.page__face::after{
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 26px; height: 100%;
+  background: linear-gradient(90deg, rgba(0,0,0,0.35), transparent);
+  pointer-events: none;
+}
+
+/* ---------- Indikator halaman ---------- */
+.dots{
+  display: flex;
+  gap: 8px;
+}
+.dot{
+  width: 7px; height: 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.28);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.dot.is-active{
+  background: var(--yellow);
+  transform: scale(1.3);
+}
+
+.hint{
+  font-size: 0.76rem;
+  color: rgba(251,250,246,0.5);
+  text-align: center;
+  margin: 0;
+  max-width: 380px;
+}
+
+/* ---------- Responsive ---------- */
+
+/* Desktop / layar besar: buku ditampilkan jauh lebih besar,
+   diskalakan dari tinggi viewport supaya tidak melebihi layar */
+@media (min-width: 700px){
+  :root{
+    --page-w: clamp(380px, 62vh, 680px);
+  }
+  .hint{ font-size: 0.82rem; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .page{ transition-duration: 0.01ms; }
+  .page-left, .spine{ transition-duration: 0.01ms; }
+}
