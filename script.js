@@ -5,6 +5,8 @@
   const prevImg  = document.getElementById('prevImg');
   const spine    = document.getElementById('spine');
   const dotsWrap = document.getElementById('dots');
+  const btnPrev  = document.getElementById('btnPrev');
+  const btnNext  = document.getElementById('btnNext');
 
   const total = pages.length;   // jumlah lembar/gambar
   let current = 0;              // index halaman aktif (yang tampil di panel kanan)
@@ -48,6 +50,9 @@
       pageLeft.classList.remove('is-empty');
       spine.classList.remove('is-empty');
     }
+
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === total - 1;
   }
 
   function withAnimLock(fn) {
@@ -76,6 +81,10 @@
   book.addEventListener('click', next);
   // Klik panel kiri (pratinjau halaman sebelumnya) = kembali
   pageLeft.addEventListener('click', prev);
+
+  // Tombol navigasi eksplisit
+  btnNext.addEventListener('click', next);
+  btnPrev.addEventListener('click', prev);
 
   // Navigasi keyboard
   window.addEventListener('keydown', (e) => {
