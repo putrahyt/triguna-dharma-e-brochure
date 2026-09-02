@@ -242,19 +242,36 @@ body{
   body{ padding: 16px 10px; }
 
   :root{
-    /* budget lebar = 100vw dikurangi padding body (2x10px) dan
-       2x tombol nav (38px) + 2x gap .reader (8px) */
+    /* lebar: hampir penuh viewport (tombol sudah tidak di samping lagi)
+       tinggi: sisakan ruang buat body padding, gap antar baris, baris
+       tombol (44px), dan dots di bawahnya */
     --page-w: min(
-      calc(100vw - 112px),
-      calc((100dvh - 110px) * 610 / 866)
+      calc(100vw - 20px),
+      calc((100dvh - 160px) * 610 / 866)
     );
   }
-
-  .reader{ gap: 8px; }
 
   .page-left,
   .spine{
     display: none;
+  }
+
+  .reader{
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 10px;
+  }
+
+  .book-wrap{
+    order: 1;
+    flex-basis: 100%;
+    justify-content: center;
+  }
+
+  .nav-btn{
+    order: 2;
+    width: 44px;
+    height: 44px;
   }
 }
 
